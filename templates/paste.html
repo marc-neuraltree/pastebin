@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ paste.title or "Untitled" }} - Pastebin{% endblock %}
+
+{% block content %}
+<div class="paste-section">
+    <div class="paste-header-section">
+        <div class="paste-info">
+            <h2 class="paste-title-view">{{ paste.title or "Untitled" }}</h2>
+            <div class="paste-meta-view">
+                <span class="paste-id">Paste ID: {{ paste.id }}</span>
+                <span class="paste-date">{{ paste.created_at.strftime('%B %d, %Y at %H:%M UTC') }}</span>
+                <span class="paste-views">{{ paste.views }} views</span>
+                <span class="paste-size">{{ "%.1f"|format(paste.size_kb) }} KB</span>
+                {% if paste.expires_at %}
+                <span class="paste-expires">Expires: {{ paste.expires_at.strftime('%B %d, %Y at %H:%M UTC') }}</span>
+                {% else %}
+                <span class="paste-expires">Never expires</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="paste-content-section">
+        <div class="paste-language">
+            <strong>Language:</strong> {{ paste.language.title() }}
+        </div>
+        
+        <div class="paste-content-wrapper">
+            <div class="line-numbers">
+                {% set lines = paste.content.split('\n') %}
+                {% for line in lines %}
+                <div class="line-number">{{ loop.index }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="paste-content">
+                <pre><code class="language-{{ paste.language }}">{{ paste.content }}</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Copy to clipboard functionality
+    function copyToClipboard() {
+        const pasteContent = document.querySelector('.paste-content pre code');
+        if (pasteContent) {
+            const content = pasteContent.textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                alert('Content copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy content');
+            });
+        }
+    }
+    
+    // Add copy button functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const pasteContent = document.querySelector('.paste-content');
+        if (pasteContent) {
+            pasteContent.addEventListener('click', copyToClipboard);
+            pasteContent.style.cursor = 'pointer';
+            pasteContent.title = 'Click to copy to clipboard';
+        }
+    });
+</script>
+{% endblock %}

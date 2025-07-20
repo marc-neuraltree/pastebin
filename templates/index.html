@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Pastebin - #1 paste tool since 2002!{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h2>Welcome to Pastebin</h2>
+    <p>Pastebin is a website where you can store any text online for easy sharing. The website is mainly used by users to store pieces of sources code or configuration information, but anyone is more than welcome to paste any type of text. The idea behind the site is to make it more convenient for people to share large amounts of text online.</p>
+</div>
+
+<div class="recent-pastes-section">
+    <h3>Recent Public Pastes</h3>
+    <div class="paste-list-main">
+        {% for paste in recent_pastes %}
+        <div class="paste-item-main">
+            <a href="/paste/{{ paste.id }}" class="paste-link-main">
+                <div class="paste-header">
+                    <h4 class="paste-title-main">{{ paste.title or "Untitled" }}</h4>
+                    <span class="paste-id">#{{ paste.id }}</span>
+                </div>
+                <div class="paste-preview">
+                    {{ paste.content[:200] }}{% if paste.content|length > 200 %}...{% endif %}
+                </div>
+                <div class="paste-meta-main">
+                    <span class="paste-lang">{{ paste.language }}</span>
+                    <span class="paste-date">{{ paste.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    <span class="paste-views">{{ paste.views }} views</span>
+                    <span class="paste-size">{{ "%.1f"|format(paste.size_kb) }} KB</span>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

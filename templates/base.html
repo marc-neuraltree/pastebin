@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pastebin{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    {% block head_scripts %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">PASTEBIN</h1>
+                <nav class="nav">
+                    <a href="/api" class="nav-link">API</a>
+                    <a href="#" class="nav-link">TOOLS</a>
+                    <a href="#" class="nav-link">FAQ</a>
+                </nav>
+            </div>
+            <div class="new-paste-section">
+                <a href="/upload" class="btn-new-paste">+ New Paste</a>
+                <div class="search-section">
+                    <input type="text" placeholder="Search..." class="search-input">
+                    <button class="search-btn">🔍</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="content-wrapper">
+                <div class="main-content">
+                    {% block content %}{% endblock %}
+                </div>
+                <aside class="sidebar">
+                    <div class="sidebar-section">
+                        <h3>Public Pastes</h3>
+                        <div class="paste-list">
+                            {% for paste in recent_pastes %}
+                            <div class="paste-item">
+                                <a href="/paste/{{ paste.id }}" class="paste-link">
+                                    <div class="paste-title">{{ paste.title or "Untitled" }}</div>
+                                    <div class="paste-meta">
+                                        <span class="paste-lang">{{ paste.language }}</span>
+                                        <span class="paste-views">{{ paste.views }} views</span>
+                                        <span class="paste-size">{{ "%.1f"|format(paste.size_kb) }} KB</span>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
